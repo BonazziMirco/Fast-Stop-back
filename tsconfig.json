@@ -1,0 +1,12 @@
+{
+  "extends": "@expressjs/tsconfig/tsconfig.app.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./build",
+    "paths": {
+      "#start/*": ["./start/*"],
+      "#models/*": ["./app/models/*"]
+    },
+    "allowSyntheticDefaultImports": true
+  }
+}

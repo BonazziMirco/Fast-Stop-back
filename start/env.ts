@@ -1,29 +1,23 @@
-/*
-|--------------------------------------------------------------------------
-| Environment variables service
-|--------------------------------------------------------------------------
-|
-| The `Env.create` method creates an instance of the Env service. The
-| service validates the environment variables and also cast values
-| to JavaScript data types.
-|
-*/
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+import { cleanEnv, str, port, num } from 'envalid'
 
-import { Env } from '@expressjs/core/env'
+dotenv.config({ path: path.join(process.cwd(), '.env') })
 
-export default await Env.create(new URL('../', import.meta.url), {
-  NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
-  PORT: Env.schema.number(),
-  APP_KEY: Env.schema.string(),
-  HOST: Env.schema.string({ format: 'host' }),
-  LOG_LEVEL: Env.schema.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
-  MONGO_URI: Env.schema.string(),
-  JWT_SECRET: Env.schema.string(),
+const Env = cleanEnv(process.env, {
+  NODE_ENV: str({ choices: ['development', 'production', 'test'] }),
+  PORT: port(),
+  APP_KEY: str(),
+  HOST: str(),
+  LOG_LEVEL: str({ choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace'] }),
+  MONGO_URI: str(),
+  JWT_SECRET: str(),
+  JWT_EXPIRES_IN: str({ default: '1h' }),
+  SESSION_DRIVER: str({ choices: ['cookie', 'memory'] }),
 
-  /*
-  |----------------------------------------------------------
-  | Variables for configuring session package
-  |----------------------------------------------------------
-  */
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+  JWT_REFRESH_SECRET: str(),
+  JWT_REFRESH_EXPIRES_IN: str({ default: '7d' }),
+  JWT_REFRESH_COOKIE_MAX_AGE: num({ default: 7 * 24 * 60 * 60 * 1000 }),
 })
+
+export default Env

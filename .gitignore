@@ -120,11 +120,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.idea/*
 
 # End of https://www.gitignore.io/api/node,windows,linux,visualstudiocode
 
