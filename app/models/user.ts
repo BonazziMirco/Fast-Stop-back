@@ -1,12 +1,31 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
+import { Sequelize, DataTypes, Model } from 'sequelize';
+import env from '#start/env'
+const sequelize = new Sequelize(env.DATABASE_URL);
 
-export default mongoose.model('Student', new Schema({
-    id: Number,
-    email: String,
-    password: String,           //  must be hashed
-    name: String,
-    surname: String,
-    authority: Number,          // 0 = driver, 1 = view only, 2 = worker, 3 = admin
-    car_plate: String           // used to free a spot before the end of the reservation
-}));
+class user extends Model {}
+
+user.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    name: DataTypes.STRING,
+    surname: DataTypes.STRING,
+    authority: DataTypes.TINYINT,       // 0 = driver, 1 = view only, 2 = operator, 3 = admin
+    car_plate: DataTypes.STRING
+}, {
+    sequelize,
+    modelName: 'user',
+    tableName: 'User'
+});
+
+export default user;

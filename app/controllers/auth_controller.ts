@@ -64,17 +64,17 @@ export default class AuthController {
 
       // Generate token
       const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '1h' })
-      /*
-      const jwtRefreshSecret = env.get('JWT_REFRESH_SECRET')
+
+      const jwtRefreshSecret = env.JWT_REFRESH_SECRET
       if (!jwtRefreshSecret) {
         return response.status(500).json({ message: 'JWT_REFRESH_SECRET non configurato' })
       }
       const refreshToken = jwt.sign({ id: user._id }, jwtRefreshSecret, { expiresIn: '7d' })
-      .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict', secure: true })
-      */
+
       return response
         .status(200)
         .cookie('token', token, { httpOnly: true, sameSite: 'strict', secure: true })
+        .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict', secure: true })
         .json({
           message: 'Login effettuato con successo',
           user: {

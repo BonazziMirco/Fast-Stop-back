@@ -2,15 +2,17 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 import env from '#start/env'
 const sequelize = new Sequelize(env.DATABASE_URL);
 
-class parking_spot extends Model {}
+class reservation extends Model {}
 
-parking_spot.init({
+reservation.init({
     parking_lot_id: DataTypes.CHAR,
     spot_number: DataTypes.TINYINT,
+    car_plate: DataTypes.STRING,
+    expiration: DataTypes.TIME
 }, {
     sequelize,
-    modelName: 'parking_spot',
-    tableName: 'Parking_spot'
+    modelName: 'reservation',
+    tableName: 'Reservation'
 });
 
-export default parking_spot;
+export default reservation;
