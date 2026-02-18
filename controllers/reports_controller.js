@@ -1,4 +1,4 @@
-// const boh = require('../models');
+const { sequelize } = require('../models');
 
 class ReportsController {
     // TODO adapt to my table

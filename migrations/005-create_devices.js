@@ -39,7 +39,7 @@ module.exports = {
     })
 
     await queryInterface.addIndex('devices', ['parking_lot_id'], {
-      name: 'idx_parking_lot_id'
+      name: 'idx_parking_lot_id_devices'
     });
 
     await queryInterface.addIndex('devices', ['name'], {

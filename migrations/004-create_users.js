@@ -45,7 +45,7 @@ module.exports = {
         name: 'idx_email'
     });
 
-    await queryInterface.addIndex('users', ['carPlate'], {
+    await queryInterface.addIndex('users', ['car_plate'], {
         name: 'idx_carPlate'
     });
   },

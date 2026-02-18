@@ -10,7 +10,7 @@ module.exports = {
         EXTRACT(HOUR FROM created_at) as hour,
         parking_lot_id,
         COUNT(*) as total_reservations,
-        AVG(length) as avg_duration_minutes,
+        AVG(length) as avg_duration_minutes
       FROM reservations
       GROUP BY DATE(created_at), EXTRACT(HOUR FROM created_at), parking_lot_id
       WITH DATA;
