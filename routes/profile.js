@@ -4,8 +4,8 @@ const profileController = require('../controllers/profile_controller');
 const authorityMiddleware = require('../middleware/authority_middleware');
 
 router.get('/', authorityMiddleware.requireAnyUser, profileController.getProfile);
-router.patch('/password', authorityMiddleware.requireAnyUser, profileController.updatePassword);
-router.patch('/car-plate', authorityMiddleware.requireAnyUser, profileController.updateCarPlate);
+router.patch('/password', authorityMiddleware.requireAnyUser, profileController.changePassword);
+router.patch('/car-plate', authorityMiddleware.requireAnyUser, profileController.changeCarPlate);
 
 
 module.exports = router;

@@ -9,7 +9,7 @@ class AuthController {
    * Register a new user
    */
   async registerUser(req, res, next) {
-    const { email, password, authority = 0, car_plate } = req.body;
+    const { email, password, authority = 0, car_plate = null } = req.body;
 
     try {
       const existingUser = await User.findOne({ where: { email } });
@@ -315,7 +315,7 @@ class AuthController {
 
 
   async registerDevice(req, res, next) {
-    const { name, parking_lot_id, authority = 0 } = req.body;
+    const { name, parking_lot_id, authority} = req.body;
 
     try {
       const existingDevice = await User.findOne({ where: { name } });

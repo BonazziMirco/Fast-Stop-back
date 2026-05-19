@@ -23,10 +23,13 @@ class ProfileController {
 
     async changeCarPlate(req, res, next) {
         try {
-            const { car_plate } = req.body;
+            const { password, car_plate } = req.body;
             const user = await User.findByPk(req.user.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
+            }
+            if(!await user.checkPassword(password)) {
+                return res.status(400).json({ message: 'Password is incorrect' });
             }
             user.car_plate = car_plate;
             await user.save();
@@ -38,10 +41,13 @@ class ProfileController {
 
     async changePassword(req, res, next) {
         try {
-            const { newPassword } = req.body;
+            const { oldPassword, newPassword } = req.body;
             const user = await User.findByPk(req.user.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
+            }
+            if(!await user.checkPassword(oldPassword)) {
+                return res.status(400).json({ message: 'Old password is incorrect' });
             }
             user.password = newPassword; // Will be hashed by hook
             await user.save();
