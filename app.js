@@ -51,7 +51,7 @@ app.use('/reports', reportsRouter);
 app.use('/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 
 // error handling
-app.use(errorHandler)
+app.use(errorHandler);
 
 
 module.exports = app;

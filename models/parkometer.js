@@ -2,6 +2,7 @@ const { DataTypes, Model } = require('sequelize');
 const ParkingLot = require('./parking_lot');
 const sequelize = require('../config/database');
 
+//TODO check if it's safe to remove this file
 class Parkometer extends Model {
 
     async updateHeartBeat(id) {

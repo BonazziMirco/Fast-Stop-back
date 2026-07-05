@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const reportsController = require('../controllers/reports_controller');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
-});
+router.get('/daily', reportsController.getDailyStatsByLot);
+router.get('/weekly', reportsController.getWeeklyStatsByLot);
+router.get('/monthly', reportsController.getMonthlyStatsByLot);
 
 module.exports = router;

@@ -61,7 +61,7 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
-module.exports = {
-    AppError,
-    errorHandler
-};
+// Export the middleware function directly
+// Attach AppError as a property for other modules that may import it.
+module.exports = errorHandler;
+module.exports.AppError = AppError;

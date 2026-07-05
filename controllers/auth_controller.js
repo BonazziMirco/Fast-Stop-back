@@ -3,6 +3,7 @@ const User = require('../models/user');
 const env = require('../config/env');
 const logger = require('../config/logger');
 const Device = require("../models/device");
+const crypto = require('crypto');
 
 class AuthController {
   /**
@@ -31,6 +32,33 @@ class AuthController {
           email: user.email,
           authority: user.authority,
           car_plate: user.car_plate
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Delete an existing user
+   */
+  async deleteUser(req, res, next) {
+    const { email } = req.body;
+
+    try {
+      const existingUser = await User.findOne({ where: { email } });
+      if (!existingUser) {
+        return res.status(404).json({ message: "L'utente non esiste" });
+      }
+
+      await existingUser.destroy();
+
+      return res.status(200).json({
+        message: 'Utente eliminato correttamente',
+        user: {
+          id: existingUser.id,
+          email: existingUser.email,
+          authority: existingUser.authority
         }
       });
     } catch (error) {
@@ -183,6 +211,34 @@ class AuthController {
   }
 
   /**
+   * toggle user's active status
+   */
+
+  async toggleUserStatus(req, res, next) {
+    const { email } = req.body;
+
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'Utente non trovato' });
+      }
+      user.is_active = !user.is_active;
+      await user.save();
+      return res.status(200).json({
+        message: 'Stato utente aggiornato',
+        user: {
+          id: user.id,
+          email: user.email,
+          authority: user.authority,
+          is_active: user.is_active
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
    * Login IOT device
    * @param req
    * @param res
@@ -315,21 +371,21 @@ class AuthController {
 
 
   async registerDevice(req, res, next) {
-    const { name, parking_lot_id, authority} = req.body;
+    const { name, parking_lot_id, authority } = req.body;
 
     try {
-      const existingDevice = await User.findOne({ where: { name } });
+      const existingDevice = await Device.findOne({ where: { name } });
       if (existingDevice) {
         return res.status(400).json({ message: "Device already exists" });
       }
 
-      const apiKey = crypto.randomBytes(32).toString('hex');
+      const api_key = crypto.randomBytes(32).toString('hex');
 
       const device = await Device.create({
         name,
         parking_lot_id,
         authority,
-        apiKey
+        api_key
       });
 
       logger.info('New device created: ', {
@@ -343,7 +399,32 @@ class AuthController {
         device: {
           id: device.id,
           name: device.name,
-          authority: device.authority
+          authority: device.authority,
+          api_key: api_key
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteDevice(req, res, next) {
+    const { id } = req.body;
+
+    try {
+      const existingDevice = await Device.findByPk(id);
+      if (!existingDevice) {
+        return res.status(404).json({ message: "Device not found" });
+      }
+
+      await existingDevice.destroy();
+
+      return res.status(200).json({
+        message: 'Device deleted successfully',
+        device: {
+          id: existingDevice.id,
+          name: existingDevice.name,
+          authority: existingDevice.authority
         }
       });
     } catch (error) {

@@ -16,7 +16,6 @@ module.exports = {
       },
       parking_lot_id: {
         type: Sequelize.CHAR(2),
-        allowNull: false,
         references: {
           model: 'parking_lots',
           key: 'id'
@@ -28,9 +27,7 @@ module.exports = {
         allowNull: false
       },
       last_heartbeat: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
+        type: Sequelize.DATE
       },
       api_key: {
         type: Sequelize.STRING(60),

@@ -75,6 +75,8 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.*
+!.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -93,6 +95,9 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+# Generated API documentation
+docs/swagger.json
 
 ### Windows ###
 # Windows thumbnail cache files

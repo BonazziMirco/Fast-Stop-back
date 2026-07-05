@@ -6,8 +6,7 @@ const authorityMiddleware = require('../middleware/authority_middleware');
 
 router.get('/users', profileController.getAllUsers);
 router.delete('/users/:id', authController.deleteUser);
-router.patch('/users/:id/role', authController.updateUserRole);
-router.patch('/users/:id/activate', authController.activateUser);
+router.patch('/users/:id', authController.toggleUserStatus);
 
 
 

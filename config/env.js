@@ -1,8 +1,15 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 const { cleanEnv, str, port, num } = require('envalid');
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+const envCandidates = [
+    path.join(process.cwd(), '.env'),
+    path.resolve(__dirname, '..', '.env')
+];
+
+const envPath = envCandidates.find((candidate) => fs.existsSync(candidate));
+dotenv.config(envPath ? { path: envPath } : undefined);
 
 const Env = cleanEnv(process.env, {
     TZ: str({ default: 'UTC' }),

@@ -30,7 +30,6 @@ Device.init({
     },
     parking_lot_id: {
         type: DataTypes.CHAR(2),
-        allowNull: false,
         references: {
             model: 'parking_lots',
             key: 'id'
@@ -46,9 +45,7 @@ Device.init({
         }
     },
     last_heartbeat: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+        type: DataTypes.DATE
     },
     api_key: {
         type: DataTypes.STRING(60),

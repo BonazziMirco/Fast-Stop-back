@@ -32,12 +32,12 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('NOW()')
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('NOW()')
       }
     });
 
@@ -64,9 +64,30 @@ module.exports = {
     ADD CONSTRAINT chk_parking_lots_available 
     CHECK (available_spots <= capacity)
   `);
+
+    // Create trigger function to auto-update updated_at (PostgreSQL)
+    await queryInterface.sequelize.query(`
+      CREATE OR REPLACE FUNCTION update_updated_at_column()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        NEW.updated_at = NOW();
+        RETURN NEW;
+      END;
+      $$ language 'plpgsql';
+    `);
+
+    await queryInterface.sequelize.query(`
+      CREATE TRIGGER update_parking_lots_updated_at
+      BEFORE UPDATE ON parking_lots
+      FOR EACH ROW
+      EXECUTE PROCEDURE update_updated_at_column();
+    `);
   },
 
   async down (queryInterface, Sequelize) {
+    // Remove trigger then drop table (shared function kept)
+    await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS update_parking_lots_updated_at ON parking_lots;');
+
     await queryInterface.dropTable('parking_lots');
   }
 };
