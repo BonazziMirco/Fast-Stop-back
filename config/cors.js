@@ -1,7 +1,7 @@
 const corsOptions = {
     // TODO change the origin to the actual frontend URL when deploying
     origin: ['https://fast-stop-front.onrender.com', 'http://localhost:5173'],
-    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: true,
     exposedHeaders: [],
     credentials: true,
