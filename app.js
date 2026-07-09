@@ -25,6 +25,7 @@ const app = express();
 // security middleware
 app.use(helmet(securityConfig.helmetConfig));
 app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use('/', securityConfig.limiter);
 
 // request processing middleware
