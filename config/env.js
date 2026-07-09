@@ -23,12 +23,14 @@ const Env = cleanEnv(process.env, {
     // user jwt
     USER_JWT_SECRET: str(),
     USER_JWT_EXPIRES_IN: str({ default: '1h' }),
+    USER_JWT_COOKIE_MAX_AGE: num({ default: 10 * 60 * 1000 }),
     USER_JWT_REFRESH_SECRET: str(),
     USER_JWT_REFRESH_EXPIRES_IN: str({ default: '7d' }),
     USER_JWT_REFRESH_COOKIE_MAX_AGE: num({ default: 7 * 24 * 60 * 60 * 1000 }),
 
     // device jwt
     DEVICE_JWT_SECRET: str(),
+    DEVICE_JWT_COOKIE_MAX_AGE: num({ default: 30 * 24 * 60 * 60 * 1000 }),
     DEVICE_JWT_EXPIRES_IN: str({ default: '30d' }),
     DEVICE_JWT_REFRESH_SECRET: str(),
     DEVICE_JWT_REFRESH_EXPIRES_IN: str({ default: '365d' }),
