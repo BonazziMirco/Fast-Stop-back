@@ -44,12 +44,12 @@ const swaggerFile = require('./docs/swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // routing
-app.use('/auth', authRouter);
-app.use('/profile', profileRouter);
-app.use('/parking', parkingRouter);
-app.use('/parkometer', parkometerRouter);
-app.use('/reports', reportsRouter);
-app.use('/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/parking', parkingRouter);
+app.use('/api/parkometer', parkometerRouter);
+app.use('/api/reports', reportsRouter);
+app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 
 // error handling
 app.use(errorHandler);
