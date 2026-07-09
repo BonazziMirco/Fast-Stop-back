@@ -4,7 +4,7 @@ class ProfileController {
 
     async getProfile(req, res, next) {
         try {
-            const user = await User.findByPk(req.user.id);
+            const user = await User.findByPk(req.auth.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -24,7 +24,7 @@ class ProfileController {
     async changeCarPlate(req, res, next) {
         try {
             const { password, car_plate } = req.body;
-            const user = await User.findByPk(req.user.id);
+            const user = await User.findByPk(req.auth.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -42,7 +42,7 @@ class ProfileController {
     async changePassword(req, res, next) {
         try {
             const { oldPassword, newPassword } = req.body;
-            const user = await User.findByPk(req.user.id);
+            const user = await User.findByPk(req.auth.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -59,7 +59,7 @@ class ProfileController {
 
     async changeActiveStatus(req, res, next) {
         try {
-            const user = await User.findByPk(req.user.id);
+            const user = await User.findByPk(req.auth.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
