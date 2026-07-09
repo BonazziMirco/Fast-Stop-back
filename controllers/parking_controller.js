@@ -3,6 +3,15 @@ const logger = require('../config/logger');
 
 class ParkingController {
 
+    async getAllParkingLots(req, res, next) {
+        try {
+            const parkingData = await parkingModel.findAll();
+            return res.status(200).json(parkingData);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getParkingLotsByZone(req, res, next) {
         const { zoneId } = req.params;
         try {

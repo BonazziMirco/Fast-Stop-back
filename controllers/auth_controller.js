@@ -113,13 +113,13 @@ class AuthController {
           .status(200)
           .cookie('token', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: env.NODE_ENV === 'production',
-            maxAge: parseInt(env.USER_JWT_REFRESH_COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000
+            maxAge: parseInt(env.USER_JWT_COOKIE_MAX_AGE) || 1 * 60 * 60 * 1000
           })
           .cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: env.NODE_ENV === 'production',
             maxAge: parseInt(env.USER_JWT_REFRESH_COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000
           })
@@ -174,13 +174,15 @@ class AuthController {
           .status(200)
           .cookie('token', newToken, {
             httpOnly: true,
-            sameSite: 'strict',
-            secure: env.NODE_ENV === 'production'
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: env.NODE_ENV === 'production',
+            maxAge: parseInt(env.USER_JWT_COOKIE_MAX_AGE) || 1 * 60 * 60 * 1000
           })
           .cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            sameSite: 'strict',
-            secure: env.NODE_ENV === 'production'
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: env.NODE_ENV === 'production',
+            maxAge: parseInt(env.USER_JWT_REFRESH_COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000
           })
           .json({
             message: 'Token aggiornato',
@@ -200,9 +202,9 @@ class AuthController {
    */
   async logoutUser(req, res, next) {
     try {
-      // Clear cookies
-      res.clearCookie('token');
-      res.clearCookie('refreshToken');
+      // Clear cookies (match attributes used when setting them so browser removes correctly)
+      res.clearCookie('token', { sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax', secure: env.NODE_ENV === 'production' });
+      res.clearCookie('refreshToken', { sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax', secure: env.NODE_ENV === 'production' });
 
       return res.status(200).json({ message: 'Logout effettuato con successo' });
     } catch (error) {
@@ -283,13 +285,13 @@ class AuthController {
           .status(200)
           .cookie('token', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: env.NODE_ENV === 'production',
-            maxAge: parseInt(env.DEVICE_JWT_REFRESH_COOKIE_MAX_AGE) || 365 * 24 * 60 * 60 * 1000
+            maxAge: parseInt(env.DEVICE_JWT_COOKIE_MAX_AGE) || 30 * 24 * 60 * 60 * 1000
           })
           .cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: env.NODE_ENV === 'production',
             maxAge: parseInt(env.DEVICE_JWT_REFRESH_COOKIE_MAX_AGE) || 365 * 24 * 60 * 60 * 1000
           })
@@ -348,13 +350,15 @@ class AuthController {
           .status(200)
           .cookie('token', newToken, {
             httpOnly: true,
-            sameSite: 'strict',
-            secure: env.NODE_ENV === 'production'
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: env.NODE_ENV === 'production',
+            maxAge: parseInt(env.DEVICE_JWT_COOKIE_MAX_AGE) || 30 * 24 * 60 * 60 * 1000
           })
           .cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            sameSite: 'strict',
-            secure: env.NODE_ENV === 'production'
+            sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: env.NODE_ENV === 'production',
+            maxAge: parseInt(env.DEVICE_JWT_REFRESH_COOKIE_MAX_AGE) || 365 * 24 * 60 * 60 * 1000
           })
           .json({
             message: 'Token aggiornato',

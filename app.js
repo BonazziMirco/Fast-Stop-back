@@ -12,6 +12,7 @@ const errorHandler = require('./middleware/error_handling_middleware');
 const corsOptions = require('./config/cors');
 const securityConfig = require('./config/security');
 const authorityMiddleware = require('./middleware/authority_middleware');
+const { jwtMiddleware, handleUnauthorized } = require('./middleware/jwt_auth_middleware');
 
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
@@ -37,6 +38,9 @@ app.use(cookieParser());
 // logger
 app.use(logger);
 
+// mount jwt auth middleware (sets req.auth)
+app.use(jwtMiddleware);
+
 // swagger documentation
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./docs/swagger.json');
@@ -52,6 +56,7 @@ app.use('/api/reports', reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 
 // error handling
+app.use(handleUnauthorized);
 app.use(errorHandler);
 
 

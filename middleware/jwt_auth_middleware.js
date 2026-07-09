@@ -3,13 +3,13 @@ const env = require('../config/env');
 
 // Public paths that don't require authentication
 const publicPaths = [
-    '/auth/login',
-    '/auth/register',
-    '/auth/refresh',
-    '/auth/device/login',
-    '/auth/device/register',
-    '/auth/device/refresh',
-    '/parking/:zoneId/lots'
+    '/api/auth/login',
+    '/api/auth/register',
+    '/api/auth/refresh',
+    '/api/auth/device/login',
+    '/api/auth/device/register',
+    '/api/auth/device/refresh',
+    '/api/parking/:zoneId/lots'
 ];
 
 // Function to get token from request
