@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Device = require("../models/device");
 
 class ProfileController {
 
@@ -57,26 +58,23 @@ class ProfileController {
         }
     }
 
-    async changeActiveStatus(req, res, next) {
-        try {
-            const user = await User.findByPk(req.auth.id);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            user.is_active = !user.is_active;
-            await user.save();
-            res.status(200).json({ message: 'Account status changed successfully' });
-        } catch (error) {
-            next(error);
-        }
-    }
-
     async getAllUsers(req, res, next) {
         try {
             const users = await User.findAll({
                 attributes: ['id', 'email', 'car_plate', 'authority', 'is_active', 'created_at']
             });
             res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllDevices(req, res, next) {
+        try{
+            const devices = await Device.findAll({
+                attributes: ['id', 'name', 'parking_lot_id', 'authority', 'is_active', 'last_heartbeat']
+            })
+            res.json(devices);
         } catch (error) {
             next(error);
         }

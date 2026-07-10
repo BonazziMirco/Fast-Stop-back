@@ -39,7 +39,7 @@ module.exports = {
      * FUNZIONE TOLTA PER LIMITI ESTERNI DI DEPLOYABILITY
      */
 
-    /*
+
     // Configure auto-partitioning
     // Create parent only if not already configured to avoid duplicate key errors
     await queryInterface.sequelize.query(`
@@ -79,7 +79,7 @@ module.exports = {
       EXECUTE PROCEDURE update_updated_at_column();
     `);
 
-     */
+
   },
 
   async down (queryInterface, Sequelize) {

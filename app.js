@@ -52,7 +52,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/parking', parkingRouter);
 app.use('/api/parkometer', parkometerRouter);
-app.use('/api/reports', reportsRouter);
+app.use('/api/reports', authorityMiddleware.requireView, reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 
 // error handling

@@ -58,7 +58,6 @@ Device.init({
     timestamps: false,
     indexes: [
         { fields: ['parking_lot_id'] },
-        { fields: ['name'], unique: true }
     ],
     hooks: {
         beforeCreate: Device.hashApiKey,

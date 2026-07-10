@@ -43,10 +43,10 @@ class AuthController {
    * Delete an existing user
    */
   async deleteUser(req, res, next) {
-    const { email } = req.body;
+    const { id } = req.params;
 
     try {
-      const existingUser = await User.findOne({ where: { email } });
+      const existingUser = await User.findOne({ where: { id } });
       if (!existingUser) {
         return res.status(404).json({ message: "L'utente non esiste" });
       }
@@ -217,10 +217,10 @@ class AuthController {
    */
 
   async toggleUserStatus(req, res, next) {
-    const { email } = req.body;
+    const { id } = req.params;
 
     try {
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ where: { id } });
       if (!user) {
         return res.status(404).json({ message: 'Utente non trovato' });
       }
@@ -434,6 +434,10 @@ class AuthController {
     } catch (error) {
       next(error);
     }
+  }
+
+  checkSession(req, res, next) {
+    return res.status(200).send();
   }
 
 }

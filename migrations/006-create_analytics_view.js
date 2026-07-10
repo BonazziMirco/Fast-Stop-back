@@ -25,6 +25,11 @@ module.exports = {
           CREATE INDEX IF NOT EXISTS idx_stats_daily_lot ON stats_daily (parking_lot_id);
         `);
 
+        // Add unique index for concurrent refresh
+        await queryInterface.sequelize.query(`
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_daily_unique ON stats_daily (date, hour, parking_lot_id);
+        `);
+
         // 2. Create weekly stats materialized view
         await queryInterface.sequelize.query(`
           CREATE MATERIALIZED VIEW IF NOT EXISTS stats_weekly AS
@@ -41,6 +46,10 @@ module.exports = {
           FROM stats_daily
           GROUP BY DATE_TRUNC('week', date), parking_lot_id
           WITH DATA;
+        `);
+
+        await queryInterface.sequelize.query(`
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_weekly_unique ON stats_weekly (week, parking_lot_id);
         `);
 
         // 3. Create monthly stats materialized view
@@ -60,6 +69,10 @@ module.exports = {
           WITH DATA;
         `);
 
+        await queryInterface.sequelize.query(`
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_monthly_unique ON stats_monthly (month, parking_lot_id);
+        `);
+
         // 4. Create peak hours analysis
         await queryInterface.sequelize.query(`
           CREATE MATERIALIZED VIEW IF NOT EXISTS stats_peak_hours AS
@@ -72,6 +85,10 @@ module.exports = {
           FROM stats_daily
           GROUP BY hour, parking_lot_id
           WITH DATA;
+        `);
+
+        await queryInterface.sequelize.query(`
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_peak_hour_unique ON stats_peak_hour (hour, parking_lot_id);
         `);
     },
 
