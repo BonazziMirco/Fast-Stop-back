@@ -1,18 +1,10 @@
 {
   "development": {
-    "username": "myuser",
-    "password": "mysecretpassword",
-    "database": "mydatabase",
-    "host": "localhost",
-    "port": 5432,
+    "use_env_variable": "DATABASE_URL",
     "dialect": "postgres"
   },
   "test": {
-    "username": "myuser",
-    "password": "mysecretpassword",
-    "database": "mydatabase",
-    "host": "localhost",
-    "port": 5432,
+    "use_env_variable": "DATABASE_URL",
     "dialect": "postgres"
   },
   "production": {
