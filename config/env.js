@@ -39,7 +39,7 @@ const Env = cleanEnv(process.env, {
 
 if (Env.NODE_ENV === 'production') {
     if (!Env.SUPABASE_DATABASE_URL && !Env.DATABASE_URL) {
-        throw new Error('Set SUPABASE_DATABASE_URL or DATABASE_URL for production');
+        throw new Error('Set SUPABASE_DATABASE_URL or DATABASE_URL for production'+ Env.SUPABASE_DATABASE_URL!='');
     }
 } else if (!Env.DATABASE_URL && !Env.SUPABASE_DATABASE_URL) {
     throw new Error('Set DATABASE_URL or SUPABASE_DATABASE_URL for development and test');
