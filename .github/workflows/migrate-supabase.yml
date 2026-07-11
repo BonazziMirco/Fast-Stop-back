@@ -15,17 +15,6 @@ jobs:
         with:
           node-version: '24.17.0'
 
-      - name: Set up environment variables
-        run: |
-            echo "TZ=UTC" >> .env
-            echo "PORT=3333" >> .env
-            echo "HOST=localhost" >> .env
-            echo "LOG_LEVEL=info" >> .env
-            echo "NODE_ENV=production" >> .env
-            echo "SESSION_DRIVER=cookie" >> .env
-            echo "SUPABASE_DATABASE_URL=${{ secrets.SUPABASE_DATABASE_URL }}" >> .env
-            echo "JWT_SECRET=$(openssl rand -base64 32)" >> .env
-
       - name: Install dependencies
         run: npm ci
 
@@ -33,7 +22,9 @@ jobs:
         env:
           NODE_ENV: production
           SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          LOG_LEVEL: info
         run: |
-          npm run migrate
-
+          # Debug: Check if the variable is set (remove after debugging)
+          echo "SUPABASE_DATABASE_URL is set: ${{ secrets.SUPABASE_DATABASE_URL != '' }}"
+          
+          # Run migrations
+          npx sequelize-cli db:migrate
