@@ -27,4 +27,4 @@ jobs:
           echo "SUPABASE_DATABASE_URL is set: ${{ secrets.SUPABASE_DATABASE_URL != '' }}"
           
           # Run migrations
-          npx sequelize-cli db:migrate
+          #npx sequelize-cli db:migrate
