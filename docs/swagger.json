@@ -11,7 +11,17 @@
     "http"
   ],
   "paths": {
-    "/auth/register": {
+    "/": {
+      "options": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
       "post": {
         "description": "",
         "parameters": [
@@ -47,7 +57,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "description": "",
         "parameters": [
@@ -80,7 +90,7 @@
         }
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "description": "",
         "responses": {
@@ -90,7 +100,7 @@
         }
       }
     },
-    "/auth/refresh": {
+    "/api/auth/refresh": {
       "post": {
         "description": "",
         "parameters": [
@@ -117,7 +127,17 @@
         }
       }
     },
-    "/auth/device/register": {
+    "/api/auth/checkSession": {
+      "head": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/device/register": {
       "post": {
         "description": "",
         "parameters": [
@@ -150,7 +170,7 @@
         }
       }
     },
-    "/auth/device/login": {
+    "/api/auth/device/login": {
       "post": {
         "description": "",
         "parameters": [
@@ -180,7 +200,7 @@
         }
       }
     },
-    "/auth/device/refresh": {
+    "/api/auth/device/refresh": {
       "post": {
         "description": "",
         "parameters": [
@@ -207,7 +227,7 @@
         }
       }
     },
-    "/profile/": {
+    "/api/profile/": {
       "get": {
         "description": "",
         "responses": {
@@ -220,45 +240,81 @@
         }
       }
     },
-    "/profile/password": {
+    "/api/profile/password": {
       "patch": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/profile/car-plate": {
-      "patch": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/parking/zones/{zoneId}/lots": {
-      "get": {
         "description": "",
         "parameters": [
           {
-            "name": "zoneId",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "oldPassword": {
+                  "example": "any"
+                },
+                "newPassword": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
     },
-    "/parking/lots": {
+    "/api/profile/car-plate": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "any"
+                },
+                "car_plate": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/parking/lots": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "description": "",
         "parameters": [
@@ -294,7 +350,25 @@
         }
       }
     },
-    "/parking/lots/{id}/capacity": {
+    "/api/parking/zones/{zoneId}/lots": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "zoneId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/parking/lots/{id}/capacity": {
       "patch": {
         "description": "",
         "parameters": [
@@ -327,7 +401,7 @@
         }
       }
     },
-    "/parking/lots/{id}": {
+    "/api/parking/lots/{id}": {
       "delete": {
         "description": "",
         "parameters": [
@@ -345,7 +419,7 @@
         }
       }
     },
-    "/parking/lots/{id}/occupy": {
+    "/api/parking/lots/{id}/occupy": {
       "patch": {
         "description": "",
         "parameters": [
@@ -363,7 +437,7 @@
         }
       }
     },
-    "/parking/lots/{id}/free": {
+    "/api/parking/lots/{id}/free": {
       "patch": {
         "description": "",
         "parameters": [
@@ -381,7 +455,7 @@
         }
       }
     },
-    "/parkometer/{id}": {
+    "/api/parkometer/{id}": {
       "patch": {
         "description": "",
         "parameters": [
@@ -418,7 +492,7 @@
         }
       }
     },
-    "/parkometer/": {
+    "/api/parkometer/": {
       "post": {
         "description": "",
         "parameters": [
@@ -442,7 +516,88 @@
         }
       }
     },
-    "/reports/": {
+    "/api/reports/daily": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/reports/weekly": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/reports/monthly": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/userManagement/users": {
       "get": {
         "description": "",
         "responses": {
@@ -452,17 +607,7 @@
         }
       }
     },
-    "/userManagement/users": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/userManagement/users/{id}": {
+    "/api/userManagement/users/{id}": {
       "delete": {
         "description": "",
         "parameters": [
@@ -474,13 +619,14 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
-      }
-    },
-    "/userManagement/users/{id}/role": {
+      },
       "patch": {
         "description": "",
         "parameters": [
@@ -492,14 +638,27 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
     },
-    "/userManagement/users/{id}/activate": {
-      "patch": {
+    "/api/userManagement/devices": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/userManagement/devices/{id}": {
+      "delete": {
         "description": "",
         "parameters": [
           {
@@ -507,11 +666,26 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

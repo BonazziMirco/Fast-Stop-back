@@ -21,7 +21,7 @@ class User extends Model {
     }
 
     static async hashPlate(user) {
-        if (user.changed('car_plate')) {
+        if (user.changed('car_plate') && user.car_plate) {
             const salt = await bcrypt.genSalt(10);
             user.car_plate = await bcrypt.hash(user.car_plate, salt);
         }
@@ -81,8 +81,7 @@ User.init({
     timestamps: true,
     underscored: true,
     hooks: {
-        beforeCreate: [User.hashPassword, User.hashPlate],
-        beforeUpdate: [User.hashPassword, User.hashPlate]
+        beforeValidate: [User.hashPassword, User.hashPlate]
     },
     indexes: [
         { unique: true, fields: ['email'] },

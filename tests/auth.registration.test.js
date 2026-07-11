@@ -54,16 +54,16 @@ describe('Auth functions test', () => {
     expect(response2.body.user.is_active).toBeTruthy();
   })
 
-  test('Disable/disable user without authority', async () => {
+  test('Disable/enable user without authority', async () => {
     const id = (await User.findOne({ where: { email: 'user@mail.com'}})).id;
     const response = await request(app).patch('/api/userManagement/users/'+id).send();
     expect(response.status).toBe(401);
   })
 
-  test('Disable/disable non existing user', async () => {
+  test('Disable/enable non existing user', async () => {
     const token = (await request(app).post('/api/auth/login').send(adminTest)).body.token;
 
-    const response = await request(app).patch('/api/userManagement/users/99999999999999').set('Authorization', `Bearer ${token}`);
+    const response = await request(app).patch('/api/userManagement/users/9999999').set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(404);
     expect((response.body.message)).toBe('Utente non trovato');
   })
