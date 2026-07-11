@@ -26,16 +26,16 @@ jobs:
           HOST: localhost
 
           # user jwt
-          USER_JWT_SECRET: ${ { secrets.USER_JWT_SECRET } }
+          USER_JWT_SECRET: ${{ secrets.USER_JWT_SECRET }}
           USER_JWT_EXPIRES_IN: 1h
-          USER_JWT_REFRESH_SECRET: ${ { secrets.USER_JWT_REFRESH_SECRET } }
+          USER_JWT_REFRESH_SECRET: ${{ secrets.USER_JWT_REFRESH_SECRET }}
           USER_JWT_REFRESH_EXPIRES_IN: 7d
           USER_JWT_REFRESH_COOKIE_MAX_AGE: 604800000
 
           # device jwt
-          DEVICE_JWT_SECRET: ${ { secrets.DEVICE_JWT_SECRET } }
+          DEVICE_JWT_SECRET: ${{ secrets.DEVICE_JWT_SECRET }}
           DEVICE_JWT_EXPIRES_IN: 30d
-          DEVICE_JWT_REFRESH_SECRET: ${ { secrets.DEVICE_JWT_REFRESH_SECRET } }
+          DEVICE_JWT_REFRESH_SECRET: ${{ secrets.DEVICE_JWT_REFRESH_SECRET }}
           DEVICE_JWT_REFRESH_EXPIRES_IN: 365d
           DEVICE_JWT_REFRESH_COOKIE_MAX_AGE: 31536000000
 
