@@ -7,10 +7,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
-      LOG_LEVEL: info
-      SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -20,6 +16,14 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run migrations
+        env:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
         run: npm run migrate
       - name: Run tests
+        env:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
         run: npm test
