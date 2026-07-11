@@ -37,7 +37,7 @@ module.exports = {
                     id: 'SS',
                     name: 'San Severino',
                     address: 'Via Roberto da Sanseverino, 38121 Trento TN',
-                    zone_id: 'Zona_Stadio',
+                    zone_id: 'Zona_Albere',
                     capacity: 150,
                     available_spots: 150
                 },
@@ -53,9 +53,17 @@ module.exports = {
                     id: 'ST',
                     name: 'Stazione',
                     address: 'Piazza Dante, 38122 Trento TN',
-                    zone_id: 'Zona_Stazione',
+                    zone_id: 'Centro_Storico',
                     capacity: 200,
                     available_spots: 200
+                },
+                {
+                    id: 'PB',
+                    name: 'Parcheggio Bruno',
+                    address: 'Lungadige S. Nicolò, 38121 Trento TN',
+                    zone_id: 'Zona_Piedicastello',
+                    capacity: 300,
+                    available_spots: 300
                 }
             ]
         );
@@ -126,7 +134,7 @@ module.exports = {
 
         // remove parking lots
         await queryInterface.bulkDelete('parking_lots', {
-            id: { [Op.in]: ['SS', 'AA', 'ST'] }
+            id: { [Op.in]: ['SS', 'AA', 'ST', 'PB'] }
         }, {});
 
         // remove users

@@ -7,35 +7,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: myuser
-          POSTGRES_PASSWORD: mysecretpassword
-          POSTGRES_DB: mydatabase
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U myuser -d mydatabase"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+    env:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '24.17.0'
           cache: 'npm'
       - run: npm ci
       - name: Run migrations
-        env:
-          NODE_ENV: test
-          DATABASE_URL: postgresql://myuser:mysecretpassword@127.0.0.1:5432/mydatabase
         run: npm run migrate
       - name: Run tests
-        env:
-          NODE_ENV: test
-          DATABASE_URL: postgresql://myuser:mysecretpassword@127.0.0.1:5432/mydatabase
         run: npm test

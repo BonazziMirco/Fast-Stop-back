@@ -88,7 +88,7 @@ module.exports = {
         `);
 
         await queryInterface.sequelize.query(`
-          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_peak_hour_unique ON stats_peak_hour (hour, parking_lot_id);
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_stats_peak_hour_unique ON stats_peak_hours (hour, parking_lot_id);
         `);
     },
 
