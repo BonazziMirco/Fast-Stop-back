@@ -11,22 +11,32 @@ module.exports = {
                     email: 'user@mail.com',
                     password: await bcrypt.hash("password", 10),
                     authority: 0,
-                    car_plate: await bcrypt.hash("C4RPL473", 10)
+                    car_plate: await bcrypt.hash("C4RPL473", 10),
+                    is_active: true
                 },
                 {
                     email: 'viewer@mail.com',
                     password: await bcrypt.hash("password", 10),
-                    authority: 1
+                    authority: 1,
+                    is_active: true
                 },
                 {
                     email: 'operator@mail.com',
                     password: await bcrypt.hash("password", 10),
-                    authority: 2
+                    authority: 2,
+                    is_active: true
                 },
                 {
                     email: 'admin@mail.com',
                     password: await bcrypt.hash("password", 10),
-                    authority: 3
+                    authority: 3,
+                    is_active: true
+                },
+                {
+                    email: 'blocked@mail.com',
+                    password: await bcrypt.hash("password", 10),
+                    authority: 0,
+                    is_active: false
                 }
             ]
         );
