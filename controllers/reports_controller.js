@@ -2,6 +2,15 @@ const { QueryTypes } = require('sequelize');
 const { sequelize } = require('../models');
 
 class ReportsController {
+
+    constructor() {
+        // Bind all methods to this instance
+        this.buildFilters = this.buildFilters.bind(this);
+        this.getDailyStatsByLot = this.getDailyStatsByLot.bind(this);
+        this.getWeeklyStatsByLot = this.getWeeklyStatsByLot.bind(this);
+        this.getMonthlyStatsByLot = this.getMonthlyStatsByLot.bind(this);
+    }
+
     buildFilters(lotId, startDate, endDate, dateColumn = 'date') {
         const filters = [];
         const replacements = {};

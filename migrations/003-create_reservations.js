@@ -2,14 +2,13 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-
-  async up (queryInterface, Sequelize) {
-
+  async up(queryInterface, Sequelize) {
+    // Enable pg_partman
     await queryInterface.sequelize.query(
         'CREATE EXTENSION IF NOT EXISTS pg_partman'
     );
 
-    // Create table AS PARTITIONED from the start using raw SQL
+    // Create parent table
     await queryInterface.sequelize.query(`
       CREATE TABLE reservations (
                                   id SERIAL,
@@ -26,22 +25,26 @@ module.exports = {
 
     // Add indexes
     await queryInterface.sequelize.query(`
-      CREATE INDEX idx_parking_lot_id 
-      ON reservations (parking_lot_id);
+      CREATE INDEX idx_parking_lot_id ON reservations (parking_lot_id);
+      CREATE INDEX idx_car_plate ON reservations (car_plate);
     `);
+
+    // 🆕 FIRST: Create the initial partition manually
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+    const partitionName = `reservations_${currentYear}_${currentMonth}`;
+
+    const startDate = new Date(currentYear, now.getMonth(), 1);
+    const endDate = new Date(currentYear, now.getMonth() + 1, 1);
 
     await queryInterface.sequelize.query(`
-      CREATE INDEX idx_car_plate 
-      ON reservations (car_plate);
+      CREATE TABLE IF NOT EXISTS ${partitionName}
+        PARTITION OF reservations
+        FOR VALUES FROM ('${startDate.toISOString()}') TO ('${endDate.toISOString()}');
     `);
 
-    /**
-     * FUNZIONE TOLTA PER LIMITI ESTERNI DI DEPLOYABILITY
-     */
-
-
-    // Configure auto-partitioning
-    // Create parent only if not already configured to avoid duplicate key errors
+    // NOW configure pg_partman
     await queryInterface.sequelize.query(`
       DO $$
       BEGIN
@@ -52,7 +55,7 @@ module.exports = {
       $$;
     `);
 
-    // Schedule maintenance
+    // Configure retention and premake
     await queryInterface.sequelize.query(`
       UPDATE part_config
       SET retention = '13 months',
@@ -61,7 +64,12 @@ module.exports = {
       WHERE parent_table = 'public.reservations';
     `);
 
-    // Create trigger function to auto-update updated_at (PostgreSQL)
+    // NOW run_maintenance() will work because there's at least one partition
+    await queryInterface.sequelize.query(`
+      SELECT run_maintenance('public.reservations');
+    `);
+
+    // Create the update trigger
     await queryInterface.sequelize.query(`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
@@ -78,14 +86,12 @@ module.exports = {
       FOR EACH ROW
       EXECUTE PROCEDURE update_updated_at_column();
     `);
-
-
   },
 
-  async down (queryInterface, Sequelize) {
-    // Remove trigger before dropping table (shared function kept)
-    await queryInterface.sequelize.query('DROP TRIGGER IF EXISTS update_reservations_updated_at ON reservations;');
-
+  async down(queryInterface, Sequelize) {
+    await queryInterface.sequelize.query(
+        'DROP TRIGGER IF EXISTS update_reservations_updated_at ON reservations;'
+    );
     await queryInterface.dropTable('reservations');
   }
 };
