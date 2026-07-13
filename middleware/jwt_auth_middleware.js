@@ -9,7 +9,7 @@ const publicPaths = [
     '/api/auth/device/login',
     '/api/auth/device/register',
     '/api/auth/device/refresh',
-    '/api/parking/zones/:zoneId/lots'
+    /^\/api\/parking\/zones\/[^\/]+\/lots$/
 ];
 
 // Function to get token from request
