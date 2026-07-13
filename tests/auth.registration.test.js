@@ -30,7 +30,6 @@ describe('Auth functions test', () => {
 
   test('Log in sucessfully', async () => {
     const response = await request(app).post('/api/auth/login').send(adminTest);
-    expect(response.body.message).toBe('a');
     expect(response.status).toBe(200);
     expect(response.body.user.email).toBe(adminTest.email);
     expect(response.body.user.authority).toBe(3);
