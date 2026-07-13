@@ -27,7 +27,7 @@ const app = express();
 app.use(helmet(securityConfig.helmetConfig));
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
-app.use('/', securityConfig.limiter);
+//app.use('/', securityConfig.limiter);
 
 // request processing middleware
 app.use(compression());

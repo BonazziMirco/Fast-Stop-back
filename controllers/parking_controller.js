@@ -22,14 +22,24 @@ class ParkingController {
         }
     }
 
-    async updateParkingCapacity(req, res, next) {
+    async updateParkingLot(req, res, next) {
         const { id } = req.params;
-        const { newTotalSpots } = req.body;
+        const { newName, newAddress, newTotalSpots, newState } = req.body;
         try {
             const parking_lot = await parkingModel.findByPk(id);
             if (!parking_lot) {
                 return res.status(404).json({ error: 'Parking lot not found' });
             }
+            if(parking_lot.name !== newName) {
+                parking_lot.name = newName;
+            }
+            if(parking_lot.address !== newAddress) {
+                parking_lot.address = newAddress;
+            }
+            if(newState !== newState) {
+                parking_lot.state = newState;
+            }
+            await parking_lot.save();
             const updatedData = await parking_lot.updateCapacity(newTotalSpots);
             return res.status(200).json({
                 message: 'Parking capacity updated successfully',

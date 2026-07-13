@@ -6,7 +6,7 @@ const authorityMiddleware = require('../middleware/authority_middleware');
 router.get('/lots', ParkingController.getAllParkingLots);
 router.get('/zones/:zoneId/lots', ParkingController.getParkingLotsByZone);
 router.post('/lots', authorityMiddleware.requireOperator, ParkingController.addParkingLot);
-router.patch('/lots/:id/capacity', authorityMiddleware.requireOperator, ParkingController.updateParkingCapacity);
+router.patch('/lots/:id', authorityMiddleware.requireOperator, ParkingController.updateParkingLot);
 router.delete('/lots/:id', authorityMiddleware.requireOperator, ParkingController.deleteParkingLot);
 router.patch('/lots/:id/occupy', authorityMiddleware.requireParkometer, ParkingController.occupySpot);
 router.patch('/lots/:id/free', authorityMiddleware.requireAnyUser, ParkingController.freeSpot);

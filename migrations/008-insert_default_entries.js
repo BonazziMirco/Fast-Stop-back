@@ -49,7 +49,8 @@ module.exports = {
                     address: 'Via Roberto da Sanseverino, 38121 Trento TN',
                     zone_id: 'Zona_Albere',
                     capacity: 150,
-                    available_spots: 150
+                    available_spots: 150,
+                    is_active: true
                 },
                 {
                     id: 'AA',
@@ -57,7 +58,8 @@ module.exports = {
                     address: 'Via Giovanni Prati, 38122 Trento TN',
                     zone_id: 'Centro_Storico',
                     capacity: 10,
-                    available_spots: 10
+                    available_spots: 10,
+                    is_active: true
                 },
                 {
                     id: 'ST',
@@ -65,7 +67,8 @@ module.exports = {
                     address: 'Piazza Dante, 38122 Trento TN',
                     zone_id: 'Centro_Storico',
                     capacity: 200,
-                    available_spots: 200
+                    available_spots: 200,
+                    is_active: false
                 },
                 {
                     id: 'PB',
@@ -73,7 +76,8 @@ module.exports = {
                     address: 'Lungadige S. Nicolò, 38121 Trento TN',
                     zone_id: 'Zona_Piedicastello',
                     capacity: 300,
-                    available_spots: 300
+                    available_spots: 300,
+                    is_active: true
                 }
             ]
         );

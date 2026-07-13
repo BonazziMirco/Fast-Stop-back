@@ -38,6 +38,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('NOW()')
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+        allowNull: false
       }
     });
 
