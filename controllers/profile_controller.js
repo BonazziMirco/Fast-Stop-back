@@ -72,9 +72,22 @@ class ProfileController {
     async getAllDevices(req, res, next) {
         try{
             const devices = await Device.findAll({
-                attributes: ['id', 'name', 'parking_lot_id', 'authority', 'is_active', 'last_heartbeat']
+                attributes: ['id', 'name', 'parking_lot_id', 'authority', 'last_heartbeat']
             })
             res.json(devices);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateLastHeartbeat(req, res, next) {
+        try {
+            const device = await Device.findByPk(req.auth.id);
+            if (!device) {
+                return res.status(404).json({message: 'Device not found'});
+            }
+            device.last_heartbeat = Date.now() / 1000;
+            await device.save();
         } catch (error) {
             next(error);
         }

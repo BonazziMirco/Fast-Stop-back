@@ -14,7 +14,7 @@ module.exports = {
             type: Sequelize.STRING(50),
         },
         password: {
-            type: Sequelize.STRING(60),
+            type: Sequelize.STRING(10),
         },
         authority: {
             type: Sequelize.SMALLINT,

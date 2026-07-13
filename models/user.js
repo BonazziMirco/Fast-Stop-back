@@ -8,22 +8,11 @@ class User extends Model {
         return bcrypt.compare(password, this.password);
     }
 
-    async checkCarPlate(carPlate) {
-        return bcrypt.compare(carPlate, this.car_plate);
-    }
-
 
     static async hashPassword(user) {
         if (user.changed('password')) {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(user.password, salt);
-        }
-    }
-
-    static async hashPlate(user) {
-        if (user.changed('car_plate') && user.car_plate) {
-            const salt = await bcrypt.genSalt(10);
-            user.car_plate = await bcrypt.hash(user.car_plate, salt);
         }
     }
 }
@@ -44,12 +33,8 @@ User.init({
         }
     },
     password: {
-        type: DataTypes.STRING(60), // bcrypt hash length
+        type: DataTypes.STRING(10),
         allowNull: false,
-        validate: {
-            notEmpty: true,
-            len: [60, 60] // Ensure it's a bcrypt hash
-        }
     },
     authority: {
         type: DataTypes.SMALLINT,
@@ -81,7 +66,7 @@ User.init({
     timestamps: true,
     underscored: true,
     hooks: {
-        beforeValidate: [User.hashPassword, User.hashPlate]
+        beforeValidate: User.hashPassword
     },
     indexes: [
         { unique: true, fields: ['email'] },

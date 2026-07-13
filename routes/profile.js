@@ -7,5 +7,6 @@ router.get('/', authorityMiddleware.requireAnyUser, profileController.getProfile
 router.patch('/password', authorityMiddleware.requireAnyUser, profileController.changePassword);
 router.patch('/car-plate', authorityMiddleware.requireAnyUser, profileController.changeCarPlate);
 
+router.patch('/heartBeat', profileController.updateLastHeartbeat);
 
 module.exports = router;

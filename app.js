@@ -17,7 +17,6 @@ const { jwtMiddleware, handleUnauthorized } = require('./middleware/jwt_auth_mid
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const parkingRouter = require('./routes/parkings');
-const parkometerRouter = require('./routes/parkometer');
 const reportsRouter = require('./routes/reports');
 const userManagementRouter = require('./routes/user_management');
 
@@ -51,7 +50,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/parking', parkingRouter);
-app.use('/api/parkometer', parkometerRouter);
 app.use('/api/reports', authorityMiddleware.requireView, reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 

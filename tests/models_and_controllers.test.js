@@ -72,11 +72,6 @@ describe('Controllers', () => {
     expect(parkingController).toBeDefined();
   });
 
-  test('Parkometer controller should be defined', () => {
-    const parkometerController = require('../controllers/parkometer_controller');
-    expect(parkometerController).toBeDefined();
-  });
-
   test('Reports controller should be defined', () => {
     const reportsController = require('../controllers/reports_controller');
     expect(reportsController).toBeDefined();

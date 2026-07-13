@@ -11,7 +11,7 @@ module.exports = {
                     email: 'user@mail.com',
                     password: await bcrypt.hash("password", 10),
                     authority: 0,
-                    car_plate: await bcrypt.hash("C4RPL473", 10),
+                    car_plate: "C4RPL473",
                     is_active: true
                 },
                 {
