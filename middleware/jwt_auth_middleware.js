@@ -3,6 +3,7 @@ const env = require('../config/env');
 
 // Public paths that don't require authentication
 const publicPaths = [
+    '/api-docs',
     '/api/auth/login',
     '/api/auth/register',
     '/api/auth/refresh',
