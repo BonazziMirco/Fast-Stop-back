@@ -39,13 +39,15 @@ app.use(cookieParser());
 // logger
 app.use(logger);
 
-// mount jwt auth middleware (sets req.auth)
-app.use(jwtMiddleware);
-
 // swagger documentation
 const swaggerFile = require('./docs/swagger.json');
-
 app.use('/api-docs/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+const swaggerDocument = YAML.load('./docs/openApi_documentation.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// mount jwt auth middleware (sets req.auth)
+app.use(jwtMiddleware);
 
 // routing
 app.use('/api/auth', authRouter);
@@ -53,9 +55,6 @@ app.use('/api/profile', profileRouter);
 app.use('/api/parking', parkingRouter);
 app.use('/api/reports', authorityMiddleware.requireView, reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
-
-const swaggerDocument = YAML.load('./docs/openApi_documentation.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // error handling
 app.use(handleUnauthorized);
