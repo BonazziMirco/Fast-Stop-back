@@ -43,10 +43,9 @@ app.use(logger);
 app.use(jwtMiddleware);
 
 // swagger documentation
-const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./docs/swagger.json');
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/api-docs/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // routing
 app.use('/api/auth', authRouter);
