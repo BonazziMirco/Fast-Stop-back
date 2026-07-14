@@ -54,7 +54,7 @@ app.use('/api/parking', parkingRouter);
 app.use('/api/reports', authorityMiddleware.requireView, reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
 
-const swaggerDocument = YAML.load('./openapi.yaml');
+const swaggerDocument = YAML.load('./docs/openApi_documentation.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // error handling
