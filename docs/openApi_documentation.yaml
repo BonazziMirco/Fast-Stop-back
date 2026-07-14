@@ -1,0 +1,1254 @@
+openapi: 3.0.0
+info:
+  title: Fast Stop API
+  description: Parking management system API
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@faststop.com
+
+servers:
+  - url: http://localhost:3333/api
+    description: Development server
+  - url: https://api.faststop.com/api
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          example: StrongP@ssw0rd123!
+        authority:
+          type: integer
+          enum: [0, 1, 2, 3]
+          example: 0
+          description: 0=Driver, 1=View Only, 2=Operator, 3=Admin
+        is_active:
+          type: boolean
+          example: true
+        car_plate:
+          type: string
+          example: AB123CD
+
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Gate-001
+        parking_lot_id:
+          type: string
+          example: P01
+        authority:
+          type: integer
+          enum: [0, 1, 2, 3]
+          example: 2
+          description: 0=Counter, 1=videocamera, 2=Info Display
+        api_key:
+          type: string
+          example: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+
+    ParkingLot:
+      type: object
+      properties:
+        id:
+          type: string
+          example: P01
+        name:
+          type: string
+          example: Main Street Parking
+        address:
+          type: string
+          example: 123 Main St, City
+        zoneId:
+          type: string
+          example: Z001
+        capacity:
+          type: integer
+          example: 100
+        available_spots:
+          type: integer
+          example: 45
+        total_spots:
+          type: integer
+          example: 55
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Error message description
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: StrongP@ssw0rd123!
+        authority:
+          type: integer
+          enum: [0, 1, 2, 3]
+          example: 0
+          default: 0
+          required: false
+        car_plate:
+          type: string
+          example: AB123CD
+          required: false
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: StrongP@ssw0rd123!
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    DeviceLoginRequest:
+      type: object
+      required:
+        - name
+        - api_key
+      properties:
+        name:
+          type: string
+          example: Gate-001
+        api_key:
+          type: string
+          example: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          example: OldP@ssw0rd123!
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          example: NewP@ssw0rd123!
+
+    ChangeCarPlateRequest:
+      type: object
+      required:
+        - password
+        - car_plate
+      properties:
+        password:
+          type: string
+          format: password
+          example: StrongP@ssw0rd123!
+        car_plate:
+          type: string
+          example: AB123CD
+
+    CreateParkingLotRequest:
+      type: object
+      required:
+        - name
+        - address
+        - zoneId
+        - capacity
+      properties:
+        name:
+          type: string
+          example: Main Street Parking
+        address:
+          type: string
+          example: 123 Main St, City
+        zoneId:
+          type: string
+          example: Z001
+        capacity:
+          type: integer
+          example: 100
+
+    UpdateParkingLotRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Main Street Parking
+        address:
+          type: string
+          example: 123 Main St, City
+        capacity:
+          type: integer
+          example: 100
+        is_active:
+          type: boolean
+          example: true
+          default: true
+
+    DailyStats:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: 2024-01-15
+        hour:
+          type: integer
+          example: 14
+        parking_lot_id:
+          type: string
+          example: P01
+        total_reservations:
+          type: integer
+          example: 25
+        avg_duration_minutes:
+          type: integer
+          example: 45
+
+    WeeklyStats:
+      type: object
+      properties:
+        week:
+          type: string
+          format: date
+          example: 2024-01-15
+        parking_lot_id:
+          type: string
+          example: P01
+        total_reservations:
+          type: integer
+          example: 175
+        avg_daily_reservations:
+          type: number
+          example: 25.5
+        peak_daily_count:
+          type: integer
+          example: 35
+        peak_day_date:
+          type: string
+          format: date
+          example: 2024-01-18
+        low_daily_count:
+          type: integer
+          example: 15
+        low_day_date:
+          type: string
+          format: date
+          example: 2024-01-14
+        peak_hour:
+          type: integer
+          example: 14
+
+    MonthlyStats:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+          example: 2024-01-01
+        parking_lot_id:
+          type: string
+          example: P01
+        total_reservations:
+          type: integer
+          example: 750
+        avg_daily_reservations:
+          type: number
+          example: 24.2
+        peak_daily_reservations:
+          type: integer
+          example: 40
+        low_daily_reservations:
+          type: integer
+          example: 12
+        most_common_peak_dow:
+          type: string
+          example: Friday
+        daily_stddev:
+          type: number
+          example: 8.5
+
+  parameters:
+    LotIdParam:
+      name: lotId
+      in: query
+      schema:
+        type: string
+      description: Parking lot ID (use '*' for all lots)
+    StartDateParam:
+      name: startDate
+      in: query
+      schema:
+        type: string
+        format: date
+      description: Start date (YYYY-MM-DD)
+    EndDateParam:
+      name: endDate
+      in: query
+      schema:
+        type: string
+        format: date
+      description: End date (YYYY-MM-DD)
+    UserIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: User ID
+    DeviceIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Device ID
+    ParkingLotIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Parking lot ID
+    ZoneIdParam:
+      name: zoneId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Zone ID
+
+paths:
+  # ==================== AUTHENTICATION ====================
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Create a new user account with email and password. Email must be unique.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Utente registrato correttamente
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request - email already exists or validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      summary: Login user
+      description: Authenticate user with email and password. Returns JWT token in response body and sets HTTP-only cookies.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=None
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login effettuato con successo
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Account disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      description: Clear authentication cookies to log out the user.
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout effettuato con successo
+        '401':
+          description: Unauthorized - No active session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      summary: Refresh JWT token
+      description: Get a new access token using a valid refresh token.
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token aggiornato
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized - Invalid or missing refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/checkSession:
+    get:
+      summary: Check if session is valid
+      description: Verify if the current JWT token is still valid and not expired.
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Session is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Session valid
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      type:
+                        type: string
+                        example: user
+                      authority:
+                        type: integer
+                        example: 0
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ==================== DEVICE ====================
+  /auth/device/register:
+    post:
+      summary: Register a new device
+      description: Register a new IoT device. Returns API key for device authentication.
+      tags:
+        - Device
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - parking_lot_id
+              properties:
+                name:
+                  type: string
+                  example: Gate-001
+                parking_lot_id:
+                  type: string
+                  example: P01
+                authority:
+                  type: integer
+                  enum: [0, 1, 2, 3]
+                  example: 2
+                  default: 2
+      responses:
+        '201':
+          description: Device registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Device registered successfully
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '400':
+          description: Bad request - Device already exists or validation failed
+        '401':
+          description: Unauthorized - No token provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/device/login:
+    post:
+      summary: Login IoT device
+      description: Authenticate an IoT device using its name and API key.
+      tags:
+        - Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceLoginRequest'
+      responses:
+        '200':
+          description: Device login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successfull
+                  device:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Gate-001
+                      authority:
+                        type: integer
+                        example: 2
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Bad request - Device not found or invalid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/device/refresh:
+    post:
+      summary: Refresh device JWT token
+      description: Get a new access token for a device using a valid refresh token.
+      tags:
+        - Device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token aggiornato
+                  device:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Gate-001
+                      authority:
+                        type: integer
+                        example: 2
+        '401':
+          description: Unauthorized - Invalid or missing refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ==================== PROFILE ====================
+  /profile:
+    get:
+      summary: Get user profile
+      description: Get the current user's profile information.
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /profile/password:
+    patch:
+      summary: Change user password
+      description: Change the current user's password.
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password aggiornata correttamente
+        '400':
+          description: Bad request - Invalid old password or validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /profile/car-plate:
+    patch:
+      summary: Change user car plate
+      description: Change the current user's car plate number.
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeCarPlateRequest'
+      responses:
+        '200':
+          description: Car plate changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Targa aggiornata correttamente
+        '400':
+          description: Bad request - Invalid password or validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /profile/heartBeat:
+    patch:
+      summary: Update user heartbeat
+      description: Update the current user's last heartbeat timestamp.
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: Heartbeat updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Heartbeat updated
+
+  # ==================== PARKING ====================
+  /parking/lots:
+    get:
+      summary: Get all parking lots
+      description: Get a list of all parking lots.
+      tags:
+        - Parking
+      responses:
+        '200':
+          description: List of parking lots retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParkingLot'
+
+    post:
+      summary: Create a new parking lot
+      description: Create a new parking lot (Operator+ required).
+      tags:
+        - Parking
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateParkingLotRequest'
+      responses:
+        '201':
+          description: Parking lot created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Parking lot created successfully
+                  lot:
+                    $ref: '#/components/schemas/ParkingLot'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Insufficient permissions
+
+  /parking/zones/{zoneId}/lots:
+    get:
+      summary: Get parking lots by zone
+      description: Get all parking lots in a specific zone.
+      tags:
+        - Parking
+      parameters:
+        - $ref: '#/components/parameters/ZoneIdParam'
+      responses:
+        '200':
+          description: List of parking lots in zone retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParkingLot'
+
+  /parking/lots/{id}:
+    patch:
+      summary: Update parking lot
+      description: Update a parking lot's information (Operator+ required).
+      tags:
+        - Parking
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ParkingLotIdParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParkingLotRequest'
+      responses:
+        '200':
+          description: Parking lot updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLot'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Insufficient permissions
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete parking lot
+      description: Delete a parking lot (Operator+ required).
+      tags:
+        - Parking
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ParkingLotIdParam'
+      responses:
+        '200':
+          description: Parking lot deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Parking lot deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Insufficient permissions
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /parking/lots/{id}/occupy:
+    patch:
+      summary: Occupy a parking spot
+      description: Occupy a parking spot in a lot (Parkometer required).
+      tags:
+        - Parking
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ParkingLotIdParam'
+      responses:
+        '200':
+          description: Spot occupied successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Spot occupied successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Insufficient permissions
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /parking/lots/{id}/free:
+    patch:
+      summary: Free a parking spot
+      description: Free an occupied parking spot in a lot.
+      tags:
+        - Parking
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ParkingLotIdParam'
+      responses:
+        '200':
+          description: Spot freed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Spot freed successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Insufficient permissions
+        '404':
+          description: Parking lot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ==================== REPORTS ====================
+  /reports/daily:
+    get:
+      summary: Get daily statistics
+      description: Get daily parking statistics with optional filters.
+      tags:
+        - Reports
+      parameters:
+        - $ref: '#/components/parameters/LotIdParam'
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+      responses:
+        '200':
+          description: Daily statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyStats'
+
+  /reports/weekly:
+    get:
+      summary: Get weekly statistics
+      description: Get weekly parking statistics with optional filters.
+      tags:
+        - Reports
+      parameters:
+        - $ref: '#/components/parameters/LotIdParam'
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+      responses:
+        '200':
+          description: Weekly statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyStats'
+
+  /reports/monthly:
+    get:
+      summary: Get monthly statistics
+      description: Get monthly parking statistics with optional filters.
+      tags:
+        - Reports
+      parameters:
+        - $ref: '#/components/parameters/LotIdParam'
+        - $ref: '#/components/parameters/StartDateParam'
+        - $ref: '#/components/parameters/EndDateParam'
+      responses:
+        '200':
+          description: Monthly statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonthlyStats'
+
+  # ==================== USER MANAGEMENT ====================
+  /userManagement/users:
+    get:
+      summary: Get all users
+      description: Get a list of all users (Admin only).
+      tags:
+        - User Management
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Admin required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /userManagement/users/{id}:
+    delete:
+      summary: Delete a user
+      description: Delete a user by ID (Admin only).
+      tags:
+        - User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Utente eliminato correttamente
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Admin required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      summary: Toggle user status
+      description: Enable or disable a user account (Admin only).
+      tags:
+        - User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: User status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Stato utente aggiornato
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Admin required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /userManagement/devices:
+    get:
+      summary: Get all devices
+      description: Get a list of all devices (Admin only).
+      tags:
+        - User Management
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of devices retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Admin required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /userManagement/devices/{id}:
+    delete:
+      summary: Delete a device
+      description: Delete a device by ID (Admin only).
+      tags:
+        - User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdParam'
+      responses:
+        '200':
+          description: Device deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Device deleted successfully
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Admin required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

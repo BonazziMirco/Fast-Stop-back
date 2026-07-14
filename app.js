@@ -1,4 +1,6 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -52,6 +54,9 @@ app.use('/api/profile', profileRouter);
 app.use('/api/parking', parkingRouter);
 app.use('/api/reports', authorityMiddleware.requireView, reportsRouter);
 app.use('/api/userManagement', authorityMiddleware.requireAdmin , userManagementRouter);
+
+const swaggerDocument = YAML.load('./openapi.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // error handling
 app.use(handleUnauthorized);

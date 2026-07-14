@@ -5,7 +5,7 @@
     "description": "Parking management system API",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "localhost:3333",
   "basePath": "/",
   "schemes": [
     "http"
@@ -128,7 +128,7 @@
       }
     },
     "/api/auth/checkSession": {
-      "head": {
+      "get": {
         "description": "",
         "responses": {
           "200": {
@@ -306,6 +306,16 @@
         }
       }
     },
+    "/api/profile/heartBeat": {
+      "patch": {
+        "description": "",
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/parking/lots": {
       "get": {
         "description": "",
@@ -368,7 +378,7 @@
         }
       }
     },
-    "/api/parking/lots/{id}/capacity": {
+    "/api/parking/lots/{id}": {
       "patch": {
         "description": "",
         "parameters": [
@@ -384,7 +394,16 @@
             "schema": {
               "type": "object",
               "properties": {
+                "newName": {
+                  "example": "any"
+                },
+                "newAddress": {
+                  "example": "any"
+                },
                 "newTotalSpots": {
+                  "example": "any"
+                },
+                "newState": {
                   "example": "any"
                 }
               }
@@ -399,9 +418,7 @@
             "description": "Not Found"
           }
         }
-      }
-    },
-    "/api/parking/lots/{id}": {
+      },
       "delete": {
         "description": "",
         "parameters": [
@@ -451,67 +468,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/parkometer/{id}": {
-      "patch": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/parkometer/": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "parking_lot_id": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
           }
         }
       }
@@ -691,7 +647,6 @@
       }
     }
   },
-  "snakeCase": true,
   "common": {
     "parameters": {},
     "headers": {}

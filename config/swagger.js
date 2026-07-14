@@ -3,10 +3,10 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         title: 'Fast Stop',
-        description: 'Parking management system API'
+        description: 'Parking management system API',
+        version: '1.0.0'
     },
-    host: 'localhost:3000',
-    snakeCase: true,
+    host: 'localhost:3333',
     common: {
         parameters: {}, // OpenAPI conform parameters that are commonly used
         headers: {}, // OpenAPI conform headers that are commonly used

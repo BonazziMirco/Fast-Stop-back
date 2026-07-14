@@ -87,25 +87,25 @@ module.exports = {
                 {
                     name: 'cam-S_Sev-5',
                     parking_lot_id: 'SS',
-                    authority: 2,
+                    authority: 1,
                     api_key: 'qwertyuiopasdfghjklzxcvbnm7894561230...'
                 },
                 {
                     name: 'bar-ST-1',
                     parking_lot_id: 'ST',
-                    authority: 2,
+                    authority: 0,
                     api_key: '0123456789mnbvcxzlkjhgfdsapoiuytrewq...'
                 },
                 {
                     name: 'info-P_Duomo-3',
                     parking_lot_id: null,
-                    authority: 3,
+                    authority: 2,
                     api_key: '1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0p...'
                 },
                 {
                     name: 'par-V_Giov_Prati-2',
                     parking_lot_id: 'AA',
-                    authority: 1,
+                    authority: 0,
                     api_key: 'abcdefghijklmnopqrstuvWxyz0123456789...'
                 }
             ]
